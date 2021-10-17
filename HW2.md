@@ -81,6 +81,7 @@ root@cks-master:~/k8s-workshop# curl http://127.0.0.1/healthz
 
 
 4. 通过 nsenter 进入容器查看 IP 配置
+
 root@cks-master:~/k8s-workshop# docker ps
 CONTAINER ID        IMAGE                     COMMAND             CREATED             STATUS              PORTS                NAMES
 d548bba765dd        jimqiao/httpserver:v1.0   "/httpserver"       20 minutes ago      Up 20 minutes       0.0.0.0:80->80/tcp   web
