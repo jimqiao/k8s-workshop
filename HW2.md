@@ -1,5 +1,16 @@
 1. 构建本地镜像
 
+root@cks-master:~# git clone https://github.com/jimqiao/k8s-workshop.git
+Cloning into 'k8s-workshop'...
+remote: Enumerating objects: 31, done.
+remote: Counting objects: 100% (31/31), done.
+remote: Compressing objects: 100% (27/27), done.
+remote: Total 31 (delta 8), reused 2 (delta 0), pack-reused 0
+Unpacking objects: 100% (31/31), done.
+Checking connectivity... done.
+
+root@cks-master:~# cd k8s-workshop
+
 root@cks-master:~/k8s-workshop# docker build -t jimqiao/httpserver:v1.0 .
 Sending build context to Docker daemon  88.58kB
 Step 1/10 : FROM golang:alpine as build
@@ -47,6 +58,7 @@ Configure a credential helper to remove this warning. See
 https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 
 Login Succeeded
+
 root@cks-master:~/k8s-workshop# docker push jimqiao/httpserver:v1.0
 The push refers to repository [docker.io/jimqiao/httpserver]
 66ba0c8055f1: Layer already exists 
@@ -72,8 +84,10 @@ root@cks-master:~/k8s-workshop# curl http://127.0.0.1/healthz
 root@cks-master:~/k8s-workshop# docker ps
 CONTAINER ID        IMAGE                     COMMAND             CREATED             STATUS              PORTS                NAMES
 d548bba765dd        jimqiao/httpserver:v1.0   "/httpserver"       20 minutes ago      Up 20 minutes       0.0.0.0:80->80/tcp   web
+
 root@cks-master:~/k8s-workshop# docker inspect --format '{{ .State.Pid }}' d548bba765dd
 16011
+
 root@cks-master:~/k8s-workshop# nsenter -t 16011 -n ip addr
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
