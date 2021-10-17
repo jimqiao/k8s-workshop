@@ -1,4 +1,4 @@
-构建本地镜像
+1. 构建本地镜像
 
 root@cks-master:~/k8s-workshop# docker build -t jimqiao/httpserver:v1.0 .
 Sending build context to Docker daemon  88.58kB
@@ -38,7 +38,7 @@ Successfully tagged jimqiao/httpserver:v1.0
 
 
 
-将镜像推送至 Docker 官方镜像仓库
+2. 将镜像推送至 Docker 官方镜像仓库
 
 root@cks-master:~/k8s-workshop# docker login
 Authenticating with existing credentials...
@@ -54,7 +54,7 @@ v1.1: digest: sha256:8e528130cfc69f6aeaef1b74fc89705f6d6f960f44717a853eff850670d
 
 
 
-通过 Docker 命令本地启动 httpserver
+3. 通过 Docker 命令本地启动 httpserver
 
 root@cks-master:~/k8s-workshop# docker run --name=web -d -p 80:80 jimqiao/httpserver:v1.0
 d548bba765dda49b3604c9ab5b0ba9220b73ccb0babe46778613a5e276cadd6a
@@ -68,4 +68,18 @@ root@cks-master:~/k8s-workshop# curl http://127.0.0.1/healthz
 
 
 
-通过 nsenter 进入容器查看 IP 配置
+4. 通过 nsenter 进入容器查看 IP 配置
+root@cks-master:~/k8s-workshop# docker ps
+CONTAINER ID        IMAGE                     COMMAND             CREATED             STATUS              PORTS                NAMES
+d548bba765dd        jimqiao/httpserver:v1.0   "/httpserver"       20 minutes ago      Up 20 minutes       0.0.0.0:80->80/tcp   web
+root@cks-master:~/k8s-workshop# docker inspect --format '{{ .State.Pid }}' d548bba765dd
+16011
+root@cks-master:~/k8s-workshop# nsenter -t 16011 -n ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+24: eth0@if25: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
